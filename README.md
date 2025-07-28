@@ -1,56 +1,67 @@
-# Egemen Qazaqstan PDF Article Extractor
+# PDF2JSON: Rule-Based Metadata Extraction from Newspaper PDFs
 
-Этот репозиторий содержит Python-скрипт для автоматического извлечения и структурирования метаданных из PDF-файлов казахстанской газеты **Egemen Qazaqstan**. Алгоритм использует библиотеку `PyMuPDF` для анализа визуальных блоков, определяет заголовки, авторов, категории, аннотации и сохраняет каждую статью в отдельный JSON-файл.
+## Overview
 
-## 📄 Описание
+**PDF2JSON** is a hybrid rule-based pipeline designed to automatically extract structured metadata from PDF documents (e.g., title, author, date, abstract, text, journal, category). It leverages Python tools such as `PyMuPDF`, `pdfminer.six`, and `pdfplumber` to parse and process newspaper archives and output clean, machine-readable JSON files suitable for downstream applications like training large language models.
 
-Скрипт:
-- Загружает PDF-файл газеты;
-- Определяет визуальные блоки текста;
-- Использует эвристики на основе размера шрифта и типа шрифта для выделения заголовков, авторов и тем;
-- Очищает текст от OCR-артефактов и подмен символов (`cid:XX`);
-- Извлекает первые 10 предложений как аннотацию;
-- Сохраняет каждую статью в отдельный JSON-файл;
-- Автоматически определяет дату выпуска, номер и название газеты.
+This project was developed to support structured data collection from printed publications in low-resource languages.
 
-## 📦 Зависимости
+## Features
 
-- Python 3.7+
-- PyMuPDF (`fitz`)
-```bash
-pip install pymupdf
-```
+- Integration of multiple rule-based parsers for optimal text and layout extraction  
+- Cleansing and normalization of raw OCR text  
+- Automatic metadata tagging (e.g., title, date, abstract, journal)  
+- Output generation in standardized JSON format  
+- Designed for scalability on large collections of PDF documents
 
-## 📂 Структура проекта
+## Technologies Used
 
-```
-├── finalfinal.py         # Главный скрипт извлечения
-├── 01.09.20.pdf          # Пример PDF-файла газеты
-├── *.json                # Сохранённые статьи (по одной на статью)
-└── README.md             # Описание проекта
-```
+- Python 3.x  
+- [pdfminer.six](https://github.com/pdfminer/pdfminer.six)  
+- [PyMuPDF](https://pymupdf.readthedocs.io/)  
+- [pdfplumber](https://github.com/jsvine/pdfplumber)  
+- `re`, `unicodedata`, and standard Python I/O modules
 
-## ⚙️ Использование
-
-1. Поместите PDF-файл газеты в корневую директорию.
-2. Укажите путь к PDF-файлу в переменной `pdf_path` в начале `finalfinal.py`.
-3. Запустите скрипт:
+## Installation
 
 ```bash
-python finalfinal.py
+pip install pdfminer.six PyMuPDF pdfplumber
 ```
 
-4. Результатом будут отдельные `.json`-файлы для каждой распознанной статьи с полями:
-```json
-{
-  "title": "...",
-  "topic": "...",
-  "author": "...",
-  "abstract": "...",
-  "text": "...",
-  "journal": "...",
-  "date": "...",
-  "number": "..."
-}
+## Usage
+
+```python
+from pdf2json import process_pdf
+
+pdf_path = "path/to/file.pdf"
+json_data = process_pdf(pdf_path)
+
+# Save JSON
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(json_data, f, ensure_ascii=False, indent=2)
 ```
 
+## Folder Structure
+
+```
+PDF2JSON/
+│
+├── PDF2JSON.ipynb       # Main Jupyter notebook with pipeline steps
+├── sample_data/         # Example PDFs
+├── outputs/             # Extracted JSON files
+└── README.md            # Project documentation
+```
+
+## Applications
+
+- Data preparation for training/fine-tuning LLMs  
+- Digital archiving and information retrieval  
+- Media monitoring and journalism analytics  
+
+## Contributors
+
+- Assel Ospan  
+- Madina Mansurova  
+- Talshyn Sarsembayeva  
+- Kanat Auyesbay  
+- Aman Mussa
